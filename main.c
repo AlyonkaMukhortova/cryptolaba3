@@ -30,7 +30,6 @@ char* fgetstr (FILE* fd);
 int main(int argc, char** argv) {
   char **regs;
   int *sizes, t;
-  unsigned int p = (unsigned int)'a';
   char* file_name = "\0", *text;
   init_registers(&regs, & sizes);//works
   t = analyse_input (argc, argv, &file_name);//works
@@ -54,7 +53,7 @@ int main(int argc, char** argv) {
 
 void cipher (char**regs, int* sizes, char* text1) {
   char* text = text1;
-  unsigned int* reg_ex = (int*)malloc(3 * sizeof(int));
+  unsigned int* reg_ex = (unsigned int*)malloc(3 * sizeof(unsigned int));
   unsigned int x = 0, t = 0;
   int err = 0, i = 0;
   char* s = (char*)malloc(3);
@@ -85,7 +84,7 @@ void cipher (char**regs, int* sizes, char* text1) {
 void register_transform (char*** regs, int* sizes, unsigned int** reg_ex) {
   char ** reg = *regs;
   unsigned int *ex = *reg_ex, value = 0;
-  int p = 0, *s = sizes;
+  int *s = sizes;
   for (int i = 0; i < 3; i++){
     *ex = (unsigned int)**reg;
     value = new_value(*reg, *s);
@@ -228,7 +227,6 @@ char* fgetstr (FILE* fd) {
 			len += strlen(buf);
 			ptr = (char*)realloc(ptr, len + 2);
 			int k = strlen(buf);
-			int l = strlen(ptr) + k + 1;
 			strncat(ptr,buf, k);
 		}
 	} while (n > 0);
@@ -244,7 +242,7 @@ int analyse_input (int argc, char** argv, char** key) {
     {"key", required_argument, NULL, 'k'},
     {NULL, 0, NULL, 0}
   };
-	int key_here = 0, iv_here = 0;
+	int key_here = 0;
   const char* short_options = "hvk:";
   int wrong = 1;
   while (optind < argc - 1 || optind < 2){
@@ -264,7 +262,6 @@ int analyse_input (int argc, char** argv, char** key) {
 				continue;
       }
       case 'k':{
-        int err = 0;
 				key_here = 1;
         *key = optarg;
         continue;
@@ -276,10 +273,11 @@ int analyse_input (int argc, char** argv, char** key) {
       }
     }
   }
-	if (key_here == 0)
+	if (key_here == 0){
 		if(wrong == 1)
 			return WRONG_VALUE;
 		else
 			return NO_ARGS;
+    }
   return 0;
 }
