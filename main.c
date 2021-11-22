@@ -68,6 +68,10 @@ void cipher (char**regs, int* sizes, char* text1) {
       return;
     }
     register_transform(&regs, sizes, &reg_ex);
+    //for (int i = 0; i < 7; i++){
+      //printf("%02x", (*regs)[i]);
+    //}
+    //printf("\n");
     x = func(*reg_ex, *(reg_ex + 1), *(reg_ex + 2));
     i++;
     //x = x ^ ((unsigned int)*text);
@@ -91,6 +95,7 @@ void register_transform (char*** regs, int* sizes, unsigned int** reg_ex) {
     shift_register(reg, *s, value);
     reg++;
     s++;
+    ex++;
   }
 }
 
